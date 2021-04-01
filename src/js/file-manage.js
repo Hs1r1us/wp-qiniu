@@ -1,6 +1,6 @@
 jQuery(function($){
 	// 选择要插入的附件
-	$('div.file-on-qiniu').live('click',function(e){
+	$('body').on('click', 'div.file-on-qiniu', function (e) {
 		/*$('div.selected').each(function(){ //禁止多选
 			$('.selected').removeClass('selected');
 		});*/ 
@@ -25,7 +25,7 @@ jQuery(function($){
 	});
 
 	// 点击插入按钮
-	$('#btn-insert').live('click', function(){
+	$('body').on('click', '#btn-insert', function () {
 		var divSelFiles = $('div[data-file-type!="dir"].file-on-qiniu.selected');
 		if(divSelFiles.length > 0){
 			var root_url = $('#wp-qiniu-storage-domain').val(),
@@ -105,13 +105,16 @@ jQuery(function($){
 	});
 
 	// 点击切换到上传面板
-	$('#show-upload-area').toggle(function(e){
+	var num = 0;
+	$('#show-upload-area').click(function (e) {
+		if (num++ == 0) {
 			e.preventDefault();
 			$('#files-on-qiniu,#load-more,#prev-page,#manage-buttons').hide();
 			$('#upload-to-qiniu-area').show();
 			$('#wp-qiniu-path-navi').find('a').attr('class', 'link-Disabled');
 			$(this).text('返回列表');
-		},function(e){
+		} else {
+			num = 0;
 			e.preventDefault();
 			$('#upload-to-qiniu-area').hide();
 			var divPathNavi = $('#wp-qiniu-path-navi');
@@ -119,10 +122,11 @@ jQuery(function($){
 			divPathNavi.find('a:last').attr('class', 'link-Disabled');
 			$('#files-on-qiniu,#load-more,#prev-page,#manage-buttons').show();
 			$(this).text('上传到这里');
-		});
+		}
+	});
 
 	// 点击加载更多列表
-	$('#load-more').live('click', function(e){
+	$('body').on('click', '#load-more', function (e) {
 		e.preventDefault();
 		var $this = $(this),
 			loading = $this.attr('data-loading'),
@@ -254,7 +258,7 @@ jQuery(function($){
 		$('#load-more').click();
 	});
 	// 双击文件夹
-	$('div.file-on-qiniu[data-file-type="dir"]').live('dblclick', function(e){
+	$('body').on('dblclick', 'div.file-on-qiniu[data-file-type="dir"]', function (e) {
         $('#btn-clear').click();
 		var $this = $(this),
 			pid = $this.attr('data-file-id'),
@@ -278,7 +282,7 @@ jQuery(function($){
 		divLoadMore.click();	// 开始加载文件
 	});
 	//双击文件，复制连接地址到剪贴板
-    $('div.file-on-qiniu[data-file-type!="dir"]').live('dblclick', function(e) {
+	$('body').on('dblclick', 'div.file-on-qiniu[data-file-type!="dir"]', function (e) {
         var $this = $(this),
             root_url = $('#wp-qiniu-storage-domain').val(),
             ftype = $this.attr('data-file-type'),
@@ -302,7 +306,7 @@ jQuery(function($){
 
     });
 	// 点击toolbar中的连接
-	$('#wp-qiniu-path-navi').find('a.link-Active').live('click',function(e){
+	$('#wp-qiniu-path-navi').on('click', 'a.link-Active', function (e) {
         $('#btn-clear').click();
 		var $this = $(this),
 			pid = $this.attr('data-file-id'),
