@@ -43,7 +43,16 @@ jQuery(function($){
                     if($('#wp-qiniu-watermark-style').val())
                         watermark = $('#wp-qiniu-style-split-char').val() + $('#wp-qiniu-watermark-style').val();
 					var img_src = root_url + encodeURI(fkey + watermark);
-					nhtml += '<a href="'+img_src+'"><img src="'+img_src+'" alt="'+fname+'" /></a>';
+
+					var insert = '';
+					// 如果插入样式名为空，则显示原图
+					if ($('#wp-qiniu-insert-style').val())
+						insert = $('#wp-qiniu-style-split-char').val() + $('#wp-qiniu-insert-style').val();
+					else
+						insert = watermark;
+					var img_insert = root_url + encodeURI(fkey + insert);
+
+					nhtml += '<a href="' + img_src + '"><img src="' + img_insert + '" alt="' + fname + '" /></a>';
 				}
 				// 如果被选择的是视频，使用视频播放器
 				else if(ftype == 'video'){

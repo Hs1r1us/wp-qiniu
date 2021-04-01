@@ -113,6 +113,7 @@ function wp_qiniu_storage_media_tab_box() {
         <input type="hidden" id="wp-qiniu-storage-domain" value="<?php echo esc_attr((WP_QINIU_USE_HTTPS?'https://':'http://').WP_QINIU_STORAGE_DOMAIN.'/');?>">
         <input type="hidden" id="wp-qiniu-thumbnail-style" value="<?php echo esc_attr(WP_QINIU_THUMBNAIL_STYLE);?>">
         <input type="hidden" id="wp-qiniu-watermark-style" value="<?php echo esc_attr(WP_QINIU_WATERMARK_STYLE);?>">
+        <input type="hidden" id="wp-qiniu-insert-style" value="<?php echo esc_attr(WP_QINIU_INSERT_STYLE);?>">
         <input type="hidden" id="wp-qiniu-style-split-char" value="<?php echo esc_attr(WP_QINIU_STYLE_SPLIT_CHAR);?>">
         <input type="hidden" id="wp-qiniu-plugin-url" value="<?php echo esc_attr(plugins_url('/',WP_QINIU_PLUGIN_NAME));?>">
         <input type="hidden" id="wp-qiniu-upload-url" value="<?php echo esc_attr(wp_qiniu_get_upload_url());?>">

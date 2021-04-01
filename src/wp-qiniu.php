@@ -4,7 +4,7 @@
  * Plugin Name: WP-QINIU
  * Plugin URI: http://www.syncy.cn
  * Description: WP-QINIU主要功能就是把WordPress和七牛云存储连接在一起的插件。主要功能：1、将wordpress的数据库、文件备份到七牛对象云存储，以防止由于过失而丢失了网站数据；2、把七牛对象云存储作为网站的主要存储空间，存放图片、附件，解决网站空间不够用的烦恼；3、可在网站内直接引用七牛云存储上的文件，在写文章时直接点击插入媒体，选择要插入的图片、音频、视频、附件等即可，增强wordpress用户使用七牛云存储的方便性；4、可在wordpress中以目录的形式管理七牛云存储的文件，并可以通过修改文件夹名称来批量修改七牛云存储中文件的Key，方便用户管理文件。
- * Version: 2.0.5
+ * Version: 2.0.6
  * Text Domain: wp-qiniu
  * Author:   <a href="http://www.syncy.cn/">WishInLife</a>
  * Author URI: http://www.syncy.cn
@@ -18,7 +18,7 @@
  */
 // 初始化固定值常量
 define('WP_QINIU_PLUGIN_NAME', __FILE__);
-define('WP_QINIU_PLUGIN_VER', '2.0.5');
+define('WP_QINIU_PLUGIN_VER', '2.0.6');
 require_once( dirname( __FILE__ ) . '/lib/autoload.php' );
 use Qiniu\Auth;		// 引入鉴权类
 use Qiniu\Storage\UploadManager;	// 引入上传类
@@ -39,6 +39,7 @@ define('WP_QINIU_BACKUP_BUCKET', get_option('wp_qiniu_backup_bucket'));
 define('WP_QINIU_STORAGE_DOMAIN', get_option('wp_qiniu_storage_domain'));
 define('WP_QINIU_THUMBNAIL_STYLE', get_option('wp_qiniu_thumbnail_style'));
 define('WP_QINIU_WATERMARK_STYLE', get_option('wp_qiniu_watermark_style'));
+define('WP_QINIU_INSERT_STYLE', get_option('WP_QINIU_INSERT_STYLE'));
 define('WP_QINIU_STYLE_SPLIT_CHAR', get_option('wp_qiniu_style_split_char'));
 define('WP_QINIU_IMAGE_PROTECT', get_option('wp_qiniu_image_protect'));
 define('WP_QINIU_ONLY_LOGOUSER', get_option('wp_qiniu_only_logouser'));
@@ -141,6 +142,7 @@ function wp_qiniu_deactivation(){
 	delete_option('wp_qiniu_storage_domain');
 	delete_option('wp_qiniu_thumbnail_style');
 	delete_option('wp_qiniu_watermark_style');
+	delete_option('wp_qiniu_insert_style');
 	delete_option('wp_qiniu_style_split_char');
 	delete_option('wp_qiniu_image_protect');
     delete_option('wp_qiniu_only_logouser');
@@ -196,6 +198,9 @@ function wp_qiniu_action(){
 		// 水印样式名
 		$watermark_style = sanitize_text_field( $_POST['wp_qiniu_watermark_style'] );
 		update_option( 'wp_qiniu_watermark_style', $watermark_style );
+		// 插入样式名
+		$watermark_style = sanitize_text_field( $_POST['wp_qiniu_insert_style'] );
+		update_option( 'wp_qiniu_insert_style', $watermark_style );
 		// 图片样式分隔符
 		$style_splitchar = sanitize_text_field( $_POST['wp_qiniu_style_split_char'] );
 		update_option( 'wp_qiniu_style_split_char', $style_splitchar );
@@ -386,6 +391,7 @@ function wp_qiniu_pannel(){
 					<p>备份存储空间名：<input type="text" name="wp_qiniu_backup_bucket" title="" style="width:100px;" value="<?php echo get_option('wp_qiniu_backup_bucket'); ?>" />(用于存储网站及数据库等备份文件，一般是私有存储空间。)</p>
 					<p>缩略图片样式名：<input type="text" name="wp_qiniu_thumbnail_style" title="" style="width:100px;" value="<?php echo get_option('wp_qiniu_thumbnail_style'); ?>" /></p>
 					<p>水印图片样式名：<input type="text" name="wp_qiniu_watermark_style" title="" style="width:100px;" value="<?php echo get_option('wp_qiniu_watermark_style'); ?>" /></p>
+					<p>插入图片样式名：<input type="text" name="wp_qiniu_insert_style" title="" style="width:100px;" value="<?php echo get_option('wp_qiniu_insert_style'); ?>" /></p>
 					<p>图片样式分隔符：<input type="text" name="wp_qiniu_style_split_char" title="" style="width:100px;" value="<?php if(get_option('wp_qiniu_style_split_char')){ echo get_option('wp_qiniu_style_split_char');}else{ echo '-';} ?>" /></p>
 					<p>存储空间已开启 HTTPS：<input type="checkbox" name="wp_qiniu_use_https" value="1" title="" <?php checked('1', get_option('wp_qiniu_use_https')); ?>/></p>
 					<p>存储空间已开启原图保护：<input type="checkbox" name="wp_qiniu_image_protect" value="1" title="" <?php checked('1', get_option('wp_qiniu_image_protect')); ?>/></p>
